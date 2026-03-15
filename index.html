@@ -3,158 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gilberto Lopes Junior | Disciplina e Rotina</title>
+    <title>Gilberto Lopes Junior | Criador de Conteúdo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #121212;
-            --accent: #2ecc71;
-            --secondary: #34495e;
-            --light: #f8f9fa;
+            --primary: #1e272e;
+            --accent: #27ae60;
+            --light: #f4f7f6;
+            --white: #ffffff;
         }
 
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            margin: 0;
-            background-color: var(--light);
-            color: #333;
-            line-height: 1.6;
-        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; margin: 0; background-color: var(--light); color: var(--primary); scroll-behavior: smooth; }
 
-        /* 1. HOME / HERO */
+        /* 1. HOME (HERO) */
         .hero {
+            height: 100vh;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
                         url('/gilberto/midia/WhatsApp Image 2026-03-14 at 19.35.39.jpg') no-repeat center center/cover;
-            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            color: white;
+            color: var(--white);
             padding: 20px;
         }
 
-        .hero h1 { font-size: clamp(2.5rem, 8vw, 4rem); margin: 0; }
-        .hero p { font-size: 1.2rem; margin: 20px 0; font-weight: 300; letter-spacing: 1px; }
+        .hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); margin-bottom: 5px; }
+        .hero .subtitle { font-size: 1.2rem; font-weight: 300; opacity: 0.9; }
+        .hero .main-phrase { font-size: 1.8rem; margin: 30px 0; font-weight: 600; color: var(--accent); }
 
-        .btn-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 500px; margin-top: 20px; }
+        .btn-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 700px; }
         .btn {
-            padding: 12px 25px;
-            background: var(--accent);
-            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
             text-decoration: none;
-            border-radius: 8px;
             font-weight: 600;
-            transition: all 0.3s;
-            text-align: center;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            border: 2px solid var(--accent);
         }
-        .btn:hover { background: #27ae60; transform: translateY(-2px); }
-        .btn-outline { background: transparent; border: 2px solid white; }
+        .btn-filled { background: var(--accent); color: var(--white); }
+        .btn-outline { background: transparent; color: var(--white); border-color: var(--white); }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); filter: brightness(1.1); }
 
-        /* SEÇÕES */
+        /* SEÇÕES GERAIS */
         .section { padding: 80px 10%; }
-        h2 { text-align: center; font-size: 2rem; margin-bottom: 40px; position: relative; }
-        h2::after { content: ''; width: 50px; height: 4px; background: var(--accent); position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); }
+        h2 { font-size: 2rem; text-align: center; margin-bottom: 50px; }
 
         /* 2. QUEM SOU EU */
-        .about-flex { display: flex; align-items: center; gap: 50px; flex-wrap: wrap; }
+        .about { display: flex; align-items: center; gap: 50px; flex-wrap: wrap; background: var(--white); }
         .about-img { flex: 1; min-width: 300px; }
-        .about-img img { width: 100%; border-radius: 20px; box-shadow: 20px 20px 0px var(--accent); }
-        .about-text { flex: 1.5; min-width: 300px; font-size: 1.1rem; }
+        .about-img img { width: 100%; border-radius: 20px; box-shadow: 20px 20px 0 var(--accent); }
+        .about-text { flex: 1.5; min-width: 300px; font-size: 1.1rem; line-height: 1.8; }
 
-        /* 3. CONTEÚDO */
-        .content-boxes { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-        .card { background: white; padding: 30px; border-radius: 15px; border-bottom: 5px solid var(--accent); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        /* 3. MEU CONTEÚDO */
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; }
+        .content-card {
+            background: var(--white);
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .content-card span { font-size: 3rem; display: block; margin-bottom: 15px; }
+        .content-card h3 { color: var(--accent); margin-bottom: 15px; }
+        .content-card:hover { transform: translateY(-10px); }
 
-        /* 4. GALERIA DINÂMICA */
+        /* 4. GALERIA */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
-        .media-item { border-radius: 12px; overflow: hidden; height: 350px; position: relative; }
-        .media-item img, .media-item video { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
-        .media-item:hover img { transform: scale(1.1); }
+        .gallery-item { border-radius: 15px; overflow: hidden; height: 400px; }
+        .gallery-item img, .gallery-item video { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .gallery-item:hover img { transform: scale(1.05); }
 
-        /* 5. REDES */
-        .social-bar { background: var(--secondary); color: white; text-align: center; padding: 60px 20px; }
-        .social-icons a { color: white; margin: 0 15px; text-decoration: none; font-size: 1.3rem; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; border-radius: 50px; transition: 0.3s; }
-        .social-icons a:hover { background: var(--accent); border-color: var(--accent); }
+        /* 5. REDES SOCIAIS */
+        .social-section { background: var(--primary); color: var(--white); text-align: center; }
+        .social-links { margin: 30px 0; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .social-links a { color: var(--white); text-decoration: none; font-weight: 600; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; transition: 0.3s; }
+        .social-links a:hover { background: var(--accent); border-color: var(--accent); }
 
-        footer { text-align: center; padding: 30px; background: #eee; font-size: 0.9rem; }
+        /* 6. FRASE FINAL & FOOTER */
+        .final-quote { text-align: center; padding: 80px 20px; font-size: 1.8rem; font-weight: 300; font-style: italic; background: var(--white); }
+        footer { text-align: center; padding: 40px; background: #eee; font-size: 0.9rem; border-top: 1px solid #ddd; }
 
-        @media (max-width: 768px) { .section { padding: 50px 5%; } .btn-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) {
+            .section { padding: 50px 5%; }
+            .hero h1 { font-size: 2.5rem; }
+        }
     </style>
 </head>
 <body>
 
-    <section class="hero">
+    <header class="hero">
         <h1>Gilberto Lopes Junior</h1>
-        <p>"Disciplina hoje. Resultados amanhã."</p>
-        <div class="btn-grid">
-            <a href="https://www.instagram.com/gilbertolopesj/" target="_blank" class="btn">Instagram</a>
-            <a href="https://www.tiktok.com/@gilbertolopesj" target="_blank" class="btn">TikTok</a>
-            <a href="#galeria" class="btn btn-outline">Minha Rotina</a>
-            <a href="#sobre" class="btn btn-outline">Sobre Mim</a>
+        <p class="subtitle">Criador de conteúdo sobre estudos, disciplina e rotina</p>
+        <p class="main-phrase">"Disciplina hoje. Resultados amanhã."</p>
+        <div class="btn-group">
+            <a href="https://www.instagram.com/gilbertolopesj/" target="_blank" class="btn btn-filled">Instagram</a>
+            <a href="https://www.tiktok.com/@gilbertolopesj" target="_blank" class="btn btn-filled">TikTok</a>
+            <a href="https://www.threads.com/@gilbertolopesj?hl=pt-br" target="_blank" class="btn btn-filled">Threads</a>
+            <a href="https://www.facebook.com/profile.php?id=100081194203255" target="_blank" class="btn btn-filled">Facebook</a>
+            <a href="#galeria" class="btn btn-outline">Ver minha rotina</a>
+            <a href="#sobre" class="btn btn-outline">Sobre mim</a>
+        </div>
+    </header>
+
+    <section id="sobre" class="section about">
+        <div class="about-img">
+            <img src="/gilberto/midia/WhatsApp Image 2026-03-14 at 19.50.13.jpeg" alt="Gilberto Lopes">
+        </div>
+        <div class="about-text">
+            <h2>Quem Sou Eu</h2>
+            <p>Sou Gilberto, estudante e criador de conteúdo. Compartilho minha rotina de estudos, organização, academia e evolução pessoal. Acredito que pequenas atitudes diárias podem transformar o futuro, e uso minhas redes para mostrar a realidade de quem busca melhorar todos os dias.</p>
         </div>
     </section>
 
-    <section id="sobre" class="section">
-        <div class="about-flex">
-            <div class="about-img">
-                <img src="/gilberto/midia/WhatsApp Image 2026-03-14 at 19.50.13.jpeg" alt="Gilberto Lopes Junior">
+    <section class="section">
+        <h2>O que você encontra aqui</h2>
+        <div class="content-grid">
+            <div class="content-card">
+                <span>📚</span>
+                <h3>Estudos</h3>
+                <p>Rotina de estudos, preparação para provas, métodos de aprendizado e dicas para estudar melhor.</p>
             </div>
-            <div class="about-text">
-                <h2>Quem Sou Eu</h2>
-                <p>Sou Gilberto, estudante e criador de conteúdo. Compartilho minha rotina de estudos, organização, academia e evolução pessoal. Acredito que pequenas atitudes diárias podem transformar o futuro, e uso minhas redes para mostrar a realidade de quem busca melhorar todos os dias.</p>
+            <div class="content-card">
+                <span>🧠</span>
+                <h3>Organização</h3>
+                <p>Planejamento, produtividade e hábitos que ajudam a manter uma rotina mais organizada.</p>
+            </div>
+            <div class="content-card">
+                <span>💪</span>
+                <h3>Academia</h3>
+                <p>Treinos, evolução na academia e a importância da disciplina para manter hábitos saudáveis.</p>
+            </div>
+            <div class="content-card">
+                <span>📱</span>
+                <h3>Meu dia a dia</h3>
+                <p>Momentos da minha rotina como estudante e criador de conteúdo.</p>
             </div>
         </div>
     </section>
 
-    <section class="section" style="background: #f0f2f5;">
-        <h2>Meu Conteúdo</h2>
-        <div class="content-boxes">
-            <div class="card"><h3>📚 Estudos</h3><p>Métodos, provas e rotina acadêmica.</p></div>
-            <div class="card"><h3>🧠 Organização</h3><p>Produtividade e novos hábitos.</p></div>
-            <div class="card"><h3>💪 Disciplina</h3><p>Treino pesado e constância.</p></div>
-            <div class="card"><h3>🙏 Fé</h3><p>Momentos de reflexão e valores.</p></div>
-        </div>
-    </section>
-
-    <section id="galeria" class="section">
+    <section id="galeria" class="section" style="background: #fff;">
         <h2>Minha Rotina</h2>
         <div class="gallery-grid">
-            <div class="media-item"><img src="/gilberto/midia/WhatsApp Image 2026-03-14 at 19.50.53.jpeg" alt="Treino"></div>
-            <div class="media-item"><img src="/gilberto/midia/WhatsApp Image 2026-03-14 at 19.50.10.jpeg" alt="Vôlei"></div>
-            <div class="media-item"><img src="/gilberto/midia/WhatsApp Image 2026-03-14 at 19.48.11.jpeg" alt="Família"></div>
-            
-            <div class="media-item">
+            <div class="gallery-item"><img src="/gilberto/midia/WhatsApp Image 2026-03-14 at 19.50.53.jpeg" alt="Treino"></div>
+            <div class="gallery-item"><img src="/gilberto/midia/WhatsApp Image 2026-03-14 at 19.50.10.jpeg" alt="Esporte"></div>
+            <div class="gallery-item">
                 <video muted loop autoplay playsinline>
-                    <source src="/gilberto/midia/WhatsApp Video 2026-03-14 at 19.45.56 (1).mp4" type="video/mp4">
-                </video>
-            </div>
-            <div class="media-item">
-                <video controls>
                     <source src="/gilberto/midia/WhatsApp Video 2026-03-14 at 19.46.40.mp4" type="video/mp4">
                 </video>
             </div>
-            <div class="media-item">
+            <div class="gallery-item"><img src="/gilberto/midia/WhatsApp Image 2026-03-14 at 19.48.11.jpg" alt="Família"></div>
+            <div class="gallery-item">
                 <video muted loop autoplay playsinline>
                     <source src="/gilberto/midia/WhatsApp Video 2026-03-14 at 19.47.14.mp4" type="video/mp4">
                 </video>
             </div>
+            <div class="gallery-item"><img src="/gilberto/midia/WhatsApp Image 2026-03-14 at 19.50.14.jpeg" alt="Homenagem"></div>
         </div>
     </section>
 
-    <section class="social-bar">
+    <section class="section social-section">
         <h2>Me acompanhe nas redes</h2>
-        <div class="social-icons">
-            <a href="https://www.instagram.com/gilbertolopesj/" target="_blank">Instagram</a>
+        <p>Acompanhe meu dia a dia, rotina de estudos, academia e dicas de organização nas minhas redes sociais.</p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/gilbertolopesj/" target="_blank">@gilbertolopesj</a>
             <a href="https://www.tiktok.com/@gilbertolopesj" target="_blank">TikTok</a>
             <a href="https://www.threads.com/@gilbertolopesj?hl=pt-br" target="_blank">Threads</a>
             <a href="https://www.facebook.com/profile.php?id=100081194203255" target="_blank">Facebook</a>
         </div>
-        <p style="margin-top: 30px;">"Evoluindo um pouco todos os dias, com disciplina e fé."</p>
     </section>
 
+    <div class="final-quote">
+        "Evoluindo um pouco todos os dias."
+    </div>
+
     <footer>
-        © 2026 Gilberto Lopes Junior — Criador de conteúdo digital
+        © Gilberto Lopes — Criador de conteúdo
     </footer>
 
 </body>
