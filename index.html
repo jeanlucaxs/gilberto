@@ -25,11 +25,11 @@
             line-height: 1.6;
         }
 
-        /* 1. HOME (HERO) */
+        /* 1. HOME (HERO) - Centralizado */
         .hero {
             height: 100vh;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('/gilberto/midia/1.jpeg') no-repeat center center/cover;
+                        url('/gilberto/midia/16.jpeg') no-repeat center center/cover;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -82,10 +82,10 @@
         .content-card span { font-size: 3rem; display: block; margin-bottom: 20px; }
         .content-card h3 { color: var(--accent); margin-bottom: 15px; }
 
-        /* 4. GALERIA MISTA (FOTOS E VÍDEOS) */
+        /* 4. GALERIA (SOMENTE FOTOS) */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
-        .gallery-item { border-radius: 15px; overflow: hidden; height: 400px; background: #000; }
-        .gallery-item img, .gallery-item video { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .gallery-item { border-radius: 15px; overflow: hidden; height: 400px; background: #eee; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
         .gallery-item:hover img { transform: scale(1.05); }
 
         /* 5. REDES SOCIAIS */
@@ -122,9 +122,9 @@
         <div class="btn-group">
             <a href="https://www.instagram.com/gilbertolopesj/" target="_blank" class="btn btn-filled">Instagram</a>
             <a href="https://www.tiktok.com/@gilbertolopesj" target="_blank" class="btn btn-filled">TikTok</a>
-            <a href="https://www.threads.com/@gilbertolopesj?hl=pt-br" target="_blank" class="btn btn-filled">Threads</a>
+            <a href="https://www.threads.net/@gilbertolopesj" target="_blank" class="btn btn-filled">Threads</a>
             <a href="https://www.facebook.com/profile.php?id=100081194203255" target="_blank" class="btn btn-filled">Facebook</a>
-            <a href="#galeria" class="btn btn-outline">Ver minha rotina</a>
+            <a href="#galeria" class="btn btn-outline">Ver minha galeria</a>
             <a href="#sobre" class="btn btn-outline">Sobre mim</a>
         </div>
     </header>
@@ -166,36 +166,16 @@
     </section>
 
     <section id="galeria" class="section" style="background: #fff;">
-        <h2>Minha Rotina</h2>
+        <h2>Minha Galeria</h2>
         <div class="gallery-grid">
-            <div class="gallery-item"><img src="/gilberto/midia/2.jpeg" alt="Rotina"></div>
-            <div class="gallery-item">
-                <video muted loop autoplay playsinline>
-                    <source src="/gilberto/midia/10.mp4" type="video/mp4">
-                </video>
-            </div>
-            <div class="gallery-item"><img src="/gilberto/midia/8.jpeg" alt="Academia"></div>
-            <div class="gallery-item">
-                <video controls>
-                    <source src="/gilberto/midia/11.mp4" type="video/mp4">
-                </video>
-            </div>
-            <div class="gallery-item"><img src="/gilberto/midia/4.jpeg" alt="Fé"></div>
-            <div class="gallery-item">
-                <video muted loop autoplay playsinline>
-                    <source src="/gilberto/midia/14.mp4" type="video/mp4">
-                </video>
-            </div>
-            <div class="gallery-item">
-                <video muted loop autoplay playsinline>
-                    <source src="/gilberto/midia/13.mp4" type="video/mp4">
-                </video>
-            </div>
-            <div class="gallery-item">
-                <video muted loop autoplay playsinline>
-                    <source src="/gilberto/midia/12.mp4" type="video/mp4">
-                </video>
-            </div>
+            <div class="gallery-item"><img src="/gilberto/midia/17.jpeg" alt="Foto"></div>
+            <div class="gallery-item"><img src="/gilberto/midia/18.jpeg" alt="Foto"></div>
+            <div class="gallery-item"><img src="/gilberto/midia/19.jpeg" alt="Foto"></div>
+            <div class="gallery-item"><img src="/gilberto/midia/20.jpeg" alt="Foto"></div>
+            <div class="gallery-item"><img src="/gilberto/midia/21.jpeg" alt="Foto"></div>
+            <div class="gallery-item"><img src="/gilberto/midia/22.jpeg" alt="Foto"></div>
+            <div class="gallery-item"><img src="/gilberto/midia/23.jpeg" alt="Foto"></div>
+            <div class="gallery-item"><img src="/gilberto/midia/24.jpeg" alt="Foto"></div>
         </div>
     </section>
 
@@ -204,7 +184,7 @@
         <div class="social-links">
             <a href="https://www.instagram.com/gilbertolopesj/" target="_blank">Instagram</a>
             <a href="https://www.tiktok.com/@gilbertolopesj" target="_blank">TikTok</a>
-            <a href="https://www.threads.com/@gilbertolopesj?hl=pt-br" target="_blank">Threads</a>
+            <a href="https://www.threads.net/@gilbertolopesj" target="_blank">Threads</a>
             <a href="https://www.facebook.com/profile.php?id=100081194203255" target="_blank">Facebook</a>
         </div>
         <p>Acompanhe meu dia a dia, rotina de estudos, academia e dicas de organização nas minhas redes sociais.</p>
