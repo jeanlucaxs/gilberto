@@ -6,37 +6,48 @@
     <title>Mural de Fãs | Gilberto</title>
     <style>
         * { box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #e5ddd5; margin: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e5ddd5; margin: 0; }
+        #app { display: none; flex-direction: column; height: 100vh; }
         
-        /* Bloqueio inicial: só mostra o conteúdo se o JS autorizar */
-        #main-content { display: none; flex-direction: column; height: 100vh; }
-        
-        header { background: #075e54; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        #logout { color: #afffdf; text-decoration: none; font-size: 0.8rem; }
+        header { background: #075e54; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .user-info { font-size: 0.8rem; opacity: 0.9; }
         
         #messages-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
-        
-        .bubble { background: white; padding: 10px 15px; border-radius: 10px; max-width: 80%; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: relative; }
-        .bubble.admin { align-self: flex-end; background: #dcf8c6; }
+        .bubble { background: white; padding: 10px 15px; border-radius: 10px; max-width: 80%; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .bubble.admin { align-self: flex-end; background: #dcf8c6; border-bottom-right-radius: 0; }
         .bubble .author { font-size: 0.75rem; color: #27ae60; font-weight: bold; display: block; margin-bottom: 3px; }
-        
-        #input-area { padding: 15px; background: #f0f0f0; display: none; gap: 10px; }
-        #input-area input { flex: 1; padding: 12px; border-radius: 25px; border: 1px solid #ddd; outline: none; }
-        #input-area button { background: #075e54; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+
+        /* INPUT AREA (SÓ PARA QUEM ESTÁ EM ACESSOADM) */
+        #admin-input { padding: 15px; background: #f0f0f0; display: none; gap: 10px; border-top: 1px solid #ddd; }
+        #admin-input input { flex: 1; padding: 12px; border-radius: 25px; border: 1px solid #ddd; outline: none; }
+        #admin-input button { background: #075e54; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: bold; }
+
+        /* PAINEL DE ACESSOS (SÓ PARA QUEM ESTÁ EM ACESSOADM) */
+        #admin-stats { background: #fff; padding: 20px; display: none; border-bottom: 2px solid #075e54; max-height: 250px; overflow-y: auto; }
+        #admin-stats h3 { margin-top: 0; font-size: 1rem; color: #075e54; }
+        .log-entry { font-size: 0.8rem; border-bottom: 1px solid #eee; padding: 5px 0; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
 
-    <div id="main-content">
+    <div id="app">
+        <div id="admin-stats">
+            <h3>📊 Painel de Controle (ADM)</h3>
+            <div id="logs-list">Carregando acessos...</div>
+        </div>
+
         <header>
-            Mural do Gilberto
-            <a href="#" id="logoutBtn">Sair</a>
+            <div>
+                <span>Mural do Gilberto</span><br>
+                <span id="welcome-user" class="user-info"></span>
+            </div>
+            <button onclick="sair()" style="background:none; border:1px solid white; color:white; border-radius:5px; cursor:pointer; padding: 5px 10px;">Sair</button>
         </header>
 
         <div id="messages-container"></div>
 
-        <div id="input-area">
-            <input type="text" id="messageInput" placeholder="Escreva uma mensagem...">
+        <div id="admin-input">
+            <input type="text" id="msgInput" placeholder="Enviar mensagem oficial...">
             <button id="sendBtn">Enviar</button>
         </div>
     </div>
@@ -58,76 +69,89 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const gilbertoEmail = "gilbertolopesj@gmail.com"; 
 
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                window.location.href = "login.html";
+                window.location.href = "../login/";
                 return;
             }
 
-            // Verificação de Autorização
-            const docRef = doc(db, "acesso", user.email);
-            const docSnap = await getDoc(docRef);
+            // 1. Verifica Acesso ao Mural
+            const fãRef = doc(db, "acesso", user.email);
+            const fãSnap = await getDoc(fãRef);
 
-            if (user.email === gilbertoEmail || (docSnap.exists() && docSnap.data().autorizado === true)) {
-                // Usuário autorizado
-                document.getElementById('main-content').style.display = 'flex';
-                
-                // Grava log de visita (Estatística)
+            // 2. Verifica Acesso Administrativo
+            const admRef = doc(db, "acessoadm", user.email);
+            const admSnap = await getDoc(admRef);
+
+            const isADM = admSnap.exists();
+            const isFã = fãSnap.exists() && fãSnap.data().autorizado === true;
+
+            if (isADM || isFã) {
+                document.getElementById('app').style.display = 'flex';
+                document.getElementById('welcome-user').innerText = "Logado como: " + user.displayName;
+
+                // Log de quem entrou
                 addDoc(collection(db, "logs"), { 
                     nome: user.displayName, 
                     email: user.email, 
                     data: serverTimestamp() 
                 });
 
-                // Se for o Gilberto, mostra campo de postagem
-                if (user.email === gilbertoEmail) {
-                    document.getElementById('input-area').style.display = 'flex';
+                // Libera ferramentas administrativas se estiver em acessoadm
+                if (isADM) {
+                    document.getElementById('admin-input').style.display = 'flex';
+                    document.getElementById('admin-stats').style.display = 'block';
+                    carregarLogs();
                 }
 
                 carregarMensagens();
             } else {
-                alert("Acesso Negado. Você não está na lista de convidados.");
-                signOut(auth).then(() => { window.location.href = "login.html"; });
+                alert("E-mail não autorizado!");
+                signOut(auth).then(() => { window.location.href = "../login/"; });
             }
         });
 
-        // Carregar do Banco
         function carregarMensagens() {
             const q = query(collection(db, "mensagens"), orderBy("tempo", "asc"));
-            onSnapshot(q, (snapshot) => {
+            onSnapshot(q, (s) => {
                 const container = document.getElementById('messages-container');
                 container.innerHTML = "";
-                snapshot.forEach(doc => {
-                    const d = doc.data();
-                    const bubble = document.createElement('div');
-                    bubble.classList.add('bubble');
-                    if(d.autor === "Gilberto") bubble.classList.add('admin');
-                    
-                    bubble.innerHTML = `<span class="author">${d.autor}</span>${d.texto}`;
-                    container.appendChild(bubble);
+                s.forEach(d => {
+                    const data = d.data();
+                    const b = document.createElement('div');
+                    b.classList.add('bubble');
+                    if(data.autor === 'Gilberto') b.classList.add('admin');
+                    b.innerHTML = `<span class="author">${data.autor}</span>${data.texto}`;
+                    container.appendChild(b);
                 });
                 container.scrollTop = container.scrollHeight;
             });
         }
 
-        // Postar Mensagem
-        document.getElementById('sendBtn').onclick = () => {
-            const input = document.getElementById('messageInput');
-            if(input.value.trim() !== "") {
-                addDoc(collection(db, "mensagens"), {
-                    texto: input.value,
-                    autor: "Gilberto",
-                    tempo: serverTimestamp()
+        function carregarLogs() {
+            const qLogs = query(collection(db, "logs"), orderBy("data", "desc"));
+            onSnapshot(qLogs, (s) => {
+                const list = document.getElementById('logs-list');
+                list.innerHTML = "";
+                s.forEach(d => {
+                    const l = d.data();
+                    const tempo = l.data ? new Date(l.data.seconds * 1000).toLocaleString() : "...";
+                    list.innerHTML += `<div class="log-entry"><span>${l.nome}</span> <span>${tempo}</span></div>`;
                 });
-                input.value = "";
+            });
+        }
+
+        document.getElementById('sendBtn').onclick = () => {
+            const val = document.getElementById('msgInput').value;
+            if(val) {
+                addDoc(collection(db, "mensagens"), { texto: val, autor: "Gilberto", tempo: serverTimestamp() });
+                document.getElementById('msgInput').value = "";
             }
         };
 
-        // Botão Sair
-        document.getElementById('logoutBtn').onclick = () => {
-            signOut(auth).then(() => { window.location.href = "login.html"; });
+        window.sair = () => {
+            signOut(auth).then(() => { window.location.href = "../login/"; });
         };
     </script>
 </body>
