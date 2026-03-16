@@ -16,7 +16,7 @@
 <body>
     <div class="card">
         <h2>Mural Exclusivo</h2>
-        <p>Olá! Para acessar as mensagens e o mural do Gilberto, conecte sua conta Google.</p>
+        <p>Olá! Para acessar o mural do Gilberto, conecte sua conta Google abaixo.</p>
         <button class="btn-google" id="loginBtn">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"> Entrar com Google
         </button>
@@ -42,12 +42,12 @@
         document.getElementById('loginBtn').onclick = () => {
             signInWithPopup(auth, provider)
                 .then(() => {
-                    // Redireciona para a página do mural
-                    window.location.href = "mural.html"; 
+                    // Redireciona para a pasta do mural (sobe um nível e entra em mural)
+                    window.location.href = "../mural/"; 
                 })
                 .catch(err => {
                     console.error(err);
-                    alert("Erro ao logar. Tente novamente.");
+                    alert("Erro ao logar. Verifique se o pop-up não foi bloqueado.");
                 });
         };
     </script>
