@@ -6,46 +6,48 @@
     <title>Mural do Gilberto</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #075e54; --bg: #e5ddd5; }
+        :root { --primary: #075e54; --bg: #e5ddd5; --admin-green: #dcf8c6; --user-white: #ffffff; }
         body { font-family: 'Poppins', sans-serif; margin: 0; background: var(--bg); height: 100vh; display: flex; justify-content: center; overflow: hidden; }
         
-        #app { display: none; flex-direction: column; width: 100%; max-width: 600px; background: white; position: relative; }
+        #app { display: none; flex-direction: column; width: 100%; max-width: 600px; background: white; position: relative; height: 100%; }
 
         /* HEADER */
         header { background: var(--primary); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         #menu-btn { cursor: pointer; font-size: 1.5rem; display: none; padding: 5px; }
         
-        /* MENU LATERAL */
+        /* MENU LATERAL CORRIGIDO */
         #side-menu { 
-            position: absolute; left: -100%; top: 0; width: 280px; height: 100%; 
-            background: white; z-index: 200; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.2);
-            padding: 20px; display: flex; flex-direction: column;
+            position: absolute; left: -310px; top: 0; width: 280px; height: 100%; 
+            background: white; z-index: 1000; transition: 0.3s ease; box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            padding: 20px; box-sizing: border-box; display: flex; flex-direction: column;
         }
         #side-menu.open { left: 0; }
-        .overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 150; }
+        .overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 900; }
 
-        /* SEÇÃO DE ENQUETE / RESPONDE AÍ */
+        /* INTERAÇÃO (ENQUETE / RESPONDE AI) */
         #interacao-topo { background: #fff3cd; padding: 15px; border-bottom: 2px solid #ffeeba; display: none; }
-        .btn-voto { background: white; border: 1px solid var(--primary); color: var(--primary); padding: 8px; border-radius: 20px; margin: 5px 0; cursor: pointer; width: 100%; font-weight: 600; }
-        .btn-voto:hover { background: var(--primary); color: white; }
+        .btn-voto { background: white; border: 1px solid var(--primary); color: var(--primary); padding: 8px; border-radius: 20px; margin: 5px 0; cursor: pointer; width: 100%; font-weight: 600; font-size: 0.8rem; }
+        #responde-ai-input { width: 100%; padding: 10px; border-radius: 15px; border: 1px solid #ccc; margin-top: 10px; box-sizing: border-box; }
 
-        /* MENSAGENS */
+        /* MENSAGENS - CORES E POSIÇÕES CORRIGIDAS */
         #messages-container { 
             flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px;
             background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
-            background-blend-mode: overlay;
         }
 
-        .bubble { padding: 10px 15px; border-radius: 12px; max-width: 80%; box-shadow: 0 1px 2px rgba(0,0,0,0.1); line-height: 1.4; position: relative; }
-        .bubble.is-admin-true { background: #dcf8c6; align-self: flex-end; border-top-right-radius: 2px; }
-        .bubble.is-admin-false { background: #ffffff; align-self: flex-start; border-top-left-radius: 2px; }
+        .bubble { padding: 10px 15px; border-radius: 12px; max-width: 80%; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: relative; cursor: pointer; }
+        
+        /* ADMIN: VERDE E DIREITA */
+        .bubble.is-admin-true { background: var(--admin-green); align-self: flex-end; border-top-right-radius: 2px; }
+        /* CONVIDADO: BRANCO E ESQUERDA */
+        .bubble.is-admin-false { background: var(--user-white); align-self: flex-start; border-top-left-radius: 2px; }
 
         .author-tag { font-size: 0.7rem; font-weight: 700; color: var(--primary); display: block; margin-bottom: 3px; }
 
         /* BARRA DE ENVIO */
         #admin-controls { display: none; padding: 12px; background: #f0f0f0; border-top: 1px solid #ddd; }
         .input-group { display: flex; gap: 8px; }
-        input[type="text"] { flex: 1; padding: 12px 18px; border-radius: 25px; border: 1px solid #ccc; outline: none; }
+        #msgInput { flex: 1; padding: 10px 18px; border-radius: 25px; border: 1px solid #ccc; outline: none; }
         #sendBtn { background: var(--primary); color: white; border: none; padding: 0 20px; border-radius: 25px; cursor: pointer; font-weight: 600; }
 
         .admin-form { background: #f9f9f9; padding: 10px; border-radius: 10px; margin-bottom: 15px; font-size: 0.8rem; }
@@ -58,18 +60,16 @@
         
         <div id="side-menu">
             <h3 style="color: var(--primary); margin-top: 0;">Painel Admin</h3>
+            <p id="online-count" style="font-size: 0.8rem; color: #28a745; font-weight: bold;">● Verificando online...</p>
             
             <div id="admin-tools-extra" style="display:none;">
                 <div class="admin-form">
-                    <strong>Nova Enquete</strong>
-                    <input type="text" id="pollQuest" placeholder="Pergunta da enquete" style="width:90%; margin:5px 0;">
-                    <input type="text" id="pollOpt1" placeholder="Opção 1" style="width:90%; margin:5px 0;">
-                    <input type="text" id="pollOpt2" placeholder="Opção 2" style="width:90%; margin:5px 0;">
-                    <button onclick="criarEnquete()" style="font-size: 0.7rem;">Lançar Enquete</button>
+                    <strong>Nova Interação (24h)</strong>
+                    <input type="text" id="pollQuest" placeholder="Pergunta da interação" style="width:100%; margin:5px 0; padding:5px;">
+                    <button onclick="criarEnquete()" style="width:100%; padding:8px; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer;">Lançar</button>
                 </div>
                 <hr>
-                <h4 style="font-size: 0.8rem; color: #999;">VISITANTES</h4>
-                <div id="logs-list"></div>
+                <div id="respostas-admin" style="font-size: 0.75rem; max-height: 200px; overflow-y: auto;"></div>
             </div>
 
             <button onclick="sair()" style="width:100%; padding:12px; background: #f44336; color: white; border: none; border-radius: 8px; cursor:pointer; font-weight: bold; margin-top: auto;">Sair</button>
@@ -87,6 +87,10 @@
         <div id="interacao-topo">
             <strong id="interacao-pergunta"></strong>
             <div id="interacao-opcoes"></div>
+            <div id="box-responde-ai">
+                <input type="text" id="responde-ai-input" placeholder="Escreva sua resposta...">
+                <button onclick="enviarResposta()" style="width:100%; margin-top:5px; padding:8px; border:none; background:var(--primary); color:white; border-radius:15px; cursor:pointer;">Responder</button>
+            </div>
         </div>
 
         <div id="messages-container"></div>
@@ -102,7 +106,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, updateDoc, increment, arrayUnion, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAoaKpA1S75MWVJj1y3eynT3oPfVn30zDY",
@@ -119,121 +123,154 @@
 
         let currentUserNome = "";
         let isUserADM = false;
+        let interacaoAtivaId = null;
 
         onAuthStateChanged(auth, async (user) => {
             if (!user) { window.location.href = "../login/"; return; }
 
-            const admRef = doc(db, "acessoadm", user.email);
-            const admSnap = await getDoc(admRef);
-            const fãRef = doc(db, "acesso", user.email);
-            const fãSnap = await getDoc(fãRef);
+            const admSnap = await getDoc(doc(db, "acessoadm", user.email));
+            const fãSnap = await getDoc(doc(db, "acesso", user.email));
 
             if (admSnap.exists() || fãSnap.exists()) {
                 isUserADM = admSnap.exists();
                 currentUserNome = isUserADM ? admSnap.data().nome : fãSnap.data().nome;
                 
                 document.getElementById('app').style.display = 'flex';
-                document.getElementById('user-display-name').innerText = `Olá, ${currentUserNome}`;
+                document.getElementById('user-display-name').innerText = currentUserNome;
+
+                // Log de presença para contador online
+                addDoc(collection(db, "logs_online"), { nome: currentUserNome, timestamp: Date.now() });
 
                 if (isUserADM) {
                     document.getElementById('menu-btn').style.display = 'block';
                     document.getElementById('admin-controls').style.display = 'block';
                     document.getElementById('admin-tools-extra').style.display = 'block';
                     document.getElementById('spacer').style.display = 'none';
-                    carregarLogs();
+                    atualizarContadorOnline();
                 }
 
                 carregarMensagens();
                 carregarInteracao();
             } else {
-                alert("E-mail não autorizado.");
-                sair();
+                alert("Acesso Negado"); sair();
             }
         });
 
-        // FUNÇÃO PARA CRIAR ENQUETE (SÓ ADMIN)
+        // VER QUEM VIU (SÓ ADMIN)
+        window.verDetalhesMsg = async (id) => {
+            if(!isUserADM) return;
+            const d = await getDoc(doc(db, "mensagens", id));
+            const vistos = d.data().vistosPor || [];
+            alert("Visualizado por:\n" + (vistos.length > 0 ? vistos.join(", ") : "Ninguém ainda."));
+        };
+
+        // CRIAR INTERAÇÃO 24H
         window.criarEnquete = async () => {
             const p = document.getElementById('pollQuest').value;
-            const o1 = document.getElementById('pollOpt1').value;
-            const o2 = document.getElementById('pollOpt2').value;
-            if(p && o1 && o2) {
-                await addDoc(collection(db, "interacoes"), {
-                    pergunta: p,
-                    opcoes: [o1, o2],
-                    votos: [0, 0],
-                    ativa: true,
-                    criadoEm: serverTimestamp()
-                });
-                alert("Enquete lançada!");
-                toggleMenu();
-            }
+            if(!p) return;
+            await addDoc(collection(db, "interacoes"), {
+                pergunta: p,
+                votos: 0,
+                votantes: [],
+                respondentes: [],
+                respostas: [],
+                expira: Date.now() + (24 * 60 * 60 * 1000),
+                criadoEm: serverTimestamp()
+            });
+            document.getElementById('pollQuest').value = "";
+            alert("Interação lançada!");
         };
 
         function carregarInteracao() {
             const q = query(collection(db, "interacoes"), orderBy("criadoEm", "desc"));
             onSnapshot(q, (s) => {
                 if(!s.empty) {
-                    const data = s.docs[0].data();
-                    const id = s.docs[0].id;
-                    if(data.ativa) {
+                    const d = s.docs[0];
+                    const data = d.data();
+                    interacaoAtivaId = d.id;
+                    
+                    if(data.expira > Date.now()) {
                         document.getElementById('interacao-topo').style.display = 'block';
                         document.getElementById('interacao-pergunta').innerText = data.pergunta;
-                        let html = "";
-                        data.opcoes.forEach((opt, index) => {
-                            html += `<button class="btn-voto" onclick="votar('${id}', ${index})">${opt} (${data.votos[index]})</button>`;
-                        });
-                        document.getElementById('interacao-opcoes').innerHTML = html;
+                        document.getElementById('interacao-opcoes').innerHTML = `<button class="btn-voto" onclick="votar()">Curtir esta ideia (${data.votos})</button>`;
+                        
+                        if(isUserADM) {
+                            let lista = "<strong>Respostas:</strong><br>";
+                            data.respostas?.forEach(r => lista += `• ${r.autor}: ${r.texto}<br>`);
+                            document.getElementById('respostas-admin').innerHTML = lista;
+                        }
+                    } else {
+                        document.getElementById('interacao-topo').style.display = 'none';
                     }
                 }
             });
         }
 
-        window.votar = async (id, index) => {
-            const ref = doc(db, "interacoes", id);
-            const field = `votos.${index}`; // Erro comum: Firestore precisa de lógica específica para arrays, mas aqui usaremos campo direto se preferir ou update simples.
-            // Para simplificar, vamos atualizar o array (em produção usaria arrayUnion, mas aqui incrementaremos a posição):
-            const docSnap = await getDoc(ref);
-            let novosVotos = docSnap.data().votos;
-            novosVotos[index] += 1;
-            await updateDoc(ref, { votos: novosVotos });
+        window.votar = async () => {
+            const ref = doc(db, "interacoes", interacaoAtivaId);
+            const snap = await getDoc(ref);
+            if(snap.data().votantes?.includes(currentUserNome)) return alert("Você já votou!");
+            await updateDoc(ref, { votos: increment(1), votantes: arrayUnion(currentUserNome) });
         };
 
-        // MENSAGENS E LOGS (IGUAIS ANTERIOR)
-        async function enviar() {
-            const input = document.getElementById('msgInput');
-            if (input.value.trim()) {
-                await addDoc(collection(db, "mensagens"), {
-                    texto: input.value,
-                    autor: currentUserNome,
-                    isAdmin: true,
-                    tempo: serverTimestamp()
-                });
-                input.value = "";
-            }
-        }
+        window.enviarResposta = async () => {
+            const txt = document.getElementById('responde-ai-input').value;
+            if(!txt) return;
+            const ref = doc(db, "interacoes", interacaoAtivaId);
+            const snap = await getDoc(ref);
+            if(snap.data().respondentes?.includes(currentUserNome)) return alert("Você já respondeu!");
+            
+            await updateDoc(ref, { 
+                respostas: arrayUnion({ autor: currentUserNome, texto: txt }),
+                respondentes: arrayUnion(currentUserNome)
+            });
+            document.getElementById('responde-ai-input').value = "";
+            alert("Resposta enviada!");
+        };
 
         function carregarMensagens() {
-            const q = query(collection(db, "mensagens"), orderBy("tempo", "desc"));
+            const q = query(collection(db, "mensagens"), orderBy("tempo", "asc"));
             onSnapshot(q, (s) => {
                 const container = document.getElementById('messages-container');
                 container.innerHTML = "";
                 s.forEach(d => {
                     const data = d.data();
                     const colorClass = data.isAdmin ? 'is-admin-true' : 'is-admin-false';
-                    container.innerHTML += `<div class="bubble ${colorClass}"><span class="author-tag">${data.autor}</span>${data.texto}</div>`;
+                    
+                    if(!data.vistosPor?.includes(currentUserNome)) {
+                        updateDoc(doc(db, "mensagens", d.id), { vistosPor: arrayUnion(currentUserNome) });
+                    }
+
+                    container.innerHTML += `
+                        <div class="bubble ${colorClass}" onclick="verDetalhesMsg('${d.id}')">
+                            <span class="author-tag">${data.autor}</span>
+                            ${data.texto}
+                        </div>`;
                 });
+                container.scrollTop = container.scrollHeight;
             });
         }
 
-        function carregarLogs() {
-            const q = query(collection(db, "logs"), orderBy("data", "desc"));
+        async function enviar() {
+            const input = document.getElementById('msgInput');
+            if (!input.value.trim()) return;
+            await addDoc(collection(db, "mensagens"), {
+                texto: input.value,
+                autor: currentUserNome,
+                isAdmin: true,
+                vistosPor: [],
+                tempo: serverTimestamp()
+            });
+            input.value = "";
+        }
+
+        function atualizarContadorOnline() {
+            const cincoMinAgo = Date.now() - (5 * 60 * 1000);
+            const q = query(collection(db, "logs_online"), where("timestamp", ">", cincoMinAgo));
             onSnapshot(q, (s) => {
-                const list = document.getElementById('logs-list');
-                list.innerHTML = "";
-                s.forEach(d => {
-                    const l = d.data();
-                    list.innerHTML += `<div class="log-item">👤 <b>${l.nome}</b> entrou.</div>`;
-                });
+                const nomesUnicos = new Set();
+                s.forEach(d => nomesUnicos.add(d.data().nome));
+                document.getElementById('online-count').innerText = `● ${nomesUnicos.size} online agora`;
             });
         }
 
@@ -242,7 +279,7 @@
             const overlay = document.getElementById('overlay');
             menu.classList.toggle('open');
             overlay.style.display = menu.classList.contains('open') ? 'block' : 'none';
-        }
+        };
 
         document.getElementById('sendBtn').onclick = enviar;
         window.sair = () => signOut(auth).then(() => window.location.href = "../login/");
